@@ -1,8 +1,9 @@
-# React + Vite
+# Press and Hold
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A video-gif homage to Wario.
+Still in it's early days.
 
-Currently, two official plugins are available:
+A little test project combining gifs and videos in a fun way.
+I suspect the performance is horrible.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+All help welcome.

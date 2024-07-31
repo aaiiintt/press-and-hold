@@ -1,8 +1,8 @@
 // src/ScratchCard.jsx
 import React, { useState, useRef, useEffect } from 'react';
 
-const videos = ['video1.mp4', 'video2.mp4', 'video3.mp4']; // Add all your video sources here
-const gifs = ['gif1.gif', 'gif2.gif', 'gif3.gif']; // Add corresponding GIF sources
+const videos = ['video1.mp4', 'video2.mp4', 'video3.mp4', 'video4.mp4', 'video5.mp4']; // Add all your video sources here
+const gifs = ['gif1.gif', 'gif2.gif', 'gif3.gif', 'gif4.gif', 'gif5.gif']; // Add corresponding GIF sources
 const instructionGif = 'instruction.gif'; // Add your instruction GIF here
 
 const ScratchCard = () => {
