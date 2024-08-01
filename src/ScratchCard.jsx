@@ -9,7 +9,7 @@ import "./ScratchCard.css";
 
 const ScratchCard = () => {
   // Number of sketches (videos and gifs)
-  const number_of_sketches = 5;
+  const number_of_sketches = 6;
 
   // Generate lists for video and gif files
   const videos = generateFileList(number_of_sketches, "video", "mp4");
