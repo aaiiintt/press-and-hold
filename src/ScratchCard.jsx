@@ -1,27 +1,37 @@
-// src/ScratchCard.jsx
-import React, { useState, useRef, useEffect } from "react";
+// Import necessary modules from React
+import React, { useState, useRef, useEffect, useCallback } from "react";
 
-const videos = [
-  "video1.mp4",
-  "video2.mp4",
-  "video3.mp4",
-  "video4.mp4",
-  "video5.mp4",
-]; // Add all your video sources here
-const gifs = ["gif1.gif", "gif2.gif", "gif3.gif", "gif4.gif", "gif5.gif"]; // Add corresponding GIF sources
-const instructionGif = "instruction.gif"; // Add your instruction GIF here
+// Import utility function to generate file lists
+import { generateFileList } from "./utils/fileUtils";
+
+// Import CSS for the ScratchCard component
+import "./ScratchCard.css";
 
 const ScratchCard = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isMuted, setIsMuted] = useState(true);
-  const [cursorPosition, setCursorPosition] = useState({
-    x: window.innerWidth / 2,
-    y: window.innerHeight / 2,
-  }); // Initially center
-  const [isInteracting, setIsInteracting] = useState(false);
+  // Number of sketches (videos and gifs)
+  const number_of_sketches = 5;
+
+  // Generate lists for video and gif files
+  const videos = generateFileList(number_of_sketches, "video", "mp4");
+  const gifs = generateFileList(number_of_sketches, "gif", "gif");
+  const instructionGif = "instruction.gif";  // Gif shown when user is not interacting
+
+  // Initial state for the component
+  const initialState = {
+    currentIndex: 0,  // Current index of video/gif
+    isMuted: true,    // Is the video muted
+    cursorPosition: { x: window.innerWidth / 2, y: window.innerHeight / 2 }, // Cursor position
+    isInteracting: false,  // Is user interacting (clicking/tapping)
+  };
+
+  // State management using useState hook
+  const [{ currentIndex, isMuted, cursorPosition, isInteracting }, setState] = useState(initialState);
+
+  // Refs to hold video elements
   const videoRef = useRef(null);
   const nextVideoRef = useRef(null);
 
+  // Effect to play the video and load the next video
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.play();
@@ -30,27 +40,42 @@ const ScratchCard = () => {
       nextVideoRef.current.src = videos[(currentIndex + 1) % videos.length];
       nextVideoRef.current.load();
     }
-  }, [currentIndex]);
+  }, [currentIndex, videos]);
 
-  const handleInteractionStart = (e) => {
-    setIsMuted(false);
-    setIsInteracting(true);
-    updateCursorPosition(e);
-  };
-
-  const handleInteractionEnd = () => {
-    setIsMuted(true);
-    setIsInteracting(false);
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % videos.length);
-  };
-
-  const updateCursorPosition = (e) => {
+  // Function to update cursor position
+  const updateCursorPosition = useCallback((e) => {
     const x = e.clientX || (e.touches && e.touches[0].clientX);
     const y = e.clientY || (e.touches && e.touches[0].clientY);
     if (x !== undefined && y !== undefined) {
-      setCursorPosition({ x, y });
+      setState((prevState) => ({
+        ...prevState,
+        cursorPosition: { x, y },
+      }));
     }
-  };
+  }, []);
+
+  // Function to handle start of user interaction (mousedown/touchstart)
+  const handleInteractionStart = useCallback(
+    (e) => {
+      setState((prevState) => ({
+        ...prevState,
+        isMuted: false,  // Unmute the video
+        isInteracting: true,  // Set interacting state to true
+      }));
+      updateCursorPosition(e);  // Update cursor position
+    },
+    [updateCursorPosition],
+  );
+
+  // Function to handle end of user interaction (mouseup/touchend)
+  const handleInteractionEnd = useCallback(() => {
+    setState((prevState) => ({
+      ...prevState,
+      isMuted: true,  // Mute the video
+      isInteracting: false,  // Set interacting state to false
+      currentIndex: (prevState.currentIndex + 1) % videos.length,  // Move to next video
+    }));
+  }, [videos.length]);
 
   return (
     <div
@@ -85,17 +110,19 @@ const ScratchCard = () => {
         playsInline
       />
       <video ref={nextVideoRef} style={{ display: "none" }} preload="auto" />
-      <img
-        src={isInteracting ? gifs[currentIndex] : instructionGif}
-        alt="Cursor"
+      <div
+        className="unselectable"
         style={{
           position: "fixed",
           left: cursorPosition.x,
           top: cursorPosition.y,
-          transform: "translate(-50%, -100%)", // Align bottom center to the cursor
+          transform: "translate(-50%, -80%)",
           pointerEvents: "none",
-          width: "50vw", // 50% of the viewport width
-          height: "50vw", // To keep it square
+          width: "50vw",
+          height: "50vw",
+          backgroundImage: `url(${isInteracting ? gifs[currentIndex] : instructionGif})`,
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
         }}
       />
     </div>
