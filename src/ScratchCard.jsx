@@ -9,23 +9,24 @@ import "./ScratchCard.css";
 
 const ScratchCard = () => {
   // Number of sketches (videos and gifs)
-  const number_of_sketches = 6;
+  const number_of_sketches = 5;
 
   // Generate lists for video and gif files
   const videos = generateFileList(number_of_sketches, "video", "mp4");
   const gifs = generateFileList(number_of_sketches, "gif", "gif");
-  const instructionGif = "instruction.gif";  // Gif shown when user is not interacting
+  const instructionGif = "instruction.gif"; // Gif shown when user is not interacting
 
   // Initial state for the component
   const initialState = {
-    currentIndex: 0,  // Current index of video/gif
-    isMuted: true,    // Is the video muted
+    currentIndex: 0, // Current index of video/gif
+    isMuted: true, // Is the video muted
     cursorPosition: { x: window.innerWidth / 2, y: window.innerHeight / 2 }, // Cursor position
-    isInteracting: false,  // Is user interacting (clicking/tapping)
+    isInteracting: false, // Is user interacting (clicking/tapping)
   };
 
   // State management using useState hook
-  const [{ currentIndex, isMuted, cursorPosition, isInteracting }, setState] = useState(initialState);
+  const [{ currentIndex, isMuted, cursorPosition, isInteracting }, setState] =
+    useState(initialState);
 
   // Refs to hold video elements
   const videoRef = useRef(null);
@@ -59,10 +60,10 @@ const ScratchCard = () => {
     (e) => {
       setState((prevState) => ({
         ...prevState,
-        isMuted: false,  // Unmute the video
-        isInteracting: true,  // Set interacting state to true
+        isMuted: false, // Unmute the video
+        isInteracting: true, // Set interacting state to true
       }));
-      updateCursorPosition(e);  // Update cursor position
+      updateCursorPosition(e); // Update cursor position
     },
     [updateCursorPosition],
   );
@@ -71,9 +72,9 @@ const ScratchCard = () => {
   const handleInteractionEnd = useCallback(() => {
     setState((prevState) => ({
       ...prevState,
-      isMuted: true,  // Mute the video
-      isInteracting: false,  // Set interacting state to false
-      currentIndex: (prevState.currentIndex + 1) % videos.length,  // Move to next video
+      isMuted: true, // Mute the video
+      isInteracting: false, // Set interacting state to false
+      currentIndex: (prevState.currentIndex + 1) % videos.length, // Move to next video
     }));
   }, [videos.length]);
 
