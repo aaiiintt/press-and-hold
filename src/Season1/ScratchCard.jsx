@@ -1,14 +1,9 @@
 // src/Season1/ScratchCard.jsx
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import { generateFileList } from "../utils/fileUtils";
 import "../ScratchCard.css";
 
 const ScratchCard = () => {
-  const number_of_sketches = 6;
-
-  const videos = generateFileList(number_of_sketches, "/Season1/videos", "mp4");
-  const gifs = generateFileList(number_of_sketches, "/Season1/gifs", "gif");
-  const instructionGif = "/Season1/instruction.gif";
+  const instructionGif = "instruction.gif";
 
   const initialState = {
     currentIndex: 0,
@@ -28,10 +23,10 @@ const ScratchCard = () => {
       videoRef.current.play();
     }
     if (nextVideoRef.current) {
-      nextVideoRef.current.src = videos[(currentIndex + 1) % videos.length];
+      nextVideoRef.current.src = `/Season1/videos/video${(currentIndex + 2) % 6}.mp4`; // Hardcoded example path
       nextVideoRef.current.load();
     }
-  }, [currentIndex, videos]);
+  }, [currentIndex]);
 
   const updateCursorPosition = useCallback((e) => {
     const x = e.clientX || (e.touches && e.touches[0].clientX);
@@ -61,9 +56,9 @@ const ScratchCard = () => {
       ...prevState,
       isMuted: true,
       isInteracting: false,
-      currentIndex: (prevState.currentIndex + 1) % videos.length,
+      currentIndex: (prevState.currentIndex + 1) % 6,
     }));
-  }, [videos.length]);
+  }, []);
 
   return (
     <div
@@ -86,7 +81,7 @@ const ScratchCard = () => {
     >
       <video
         ref={videoRef}
-        src={videos[currentIndex]}
+        src={`/Season1/videos/video${currentIndex + 1}.mp4`} // Hardcoded example path
         style={{
           width: "100%",
           height: "100%",
@@ -108,7 +103,7 @@ const ScratchCard = () => {
           pointerEvents: "none",
           width: "50vw",
           height: "50vw",
-          backgroundImage: `url(${isInteracting ? gifs[currentIndex] : instructionGif})`,
+          backgroundImage: `url(${isInteracting ? `/Season1/gifs/gif${currentIndex + 1}.gif` : instructionGif})`,
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
         }}

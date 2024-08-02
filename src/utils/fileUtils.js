@@ -1,8 +1,8 @@
 // src/utils/fileUtils.js
-export const generateFileList = (count, type, extension) => {
-  const files = [];
-  for (let i = count; i > 0; i--) {
-    files.push(`${type}${i}.${extension}`);
+export const generateFileList = (number, path, extension) => {
+  const fileList = [];
+  for (let i = 1; i <= number; i++) {
+    fileList.push(`${path}/video${i}.${extension}`);
   }
-  return files;
+  return fileList;
 };

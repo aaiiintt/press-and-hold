@@ -1,6 +1,6 @@
 // src/App.jsx
-import React from 'react';
-import ScratchCard from './ScratchCard';
+import React from "react";
+import ScratchCard from "./Season1/ScratchCard";
 
 function App() {
   return <ScratchCard />;
